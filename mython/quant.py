@@ -16,7 +16,7 @@ import requests
 import matplotlib.dates as mdates # sudo apt-get install python3-matplotlib python-matplotlib-doc
 import numpy as np
 import pandas as pd # sudo apt-get install python3-pandas
-import parsedatetime # sudo pip3 install parsedatetime
+import parsedatetime # sudo pip3 install parsedatetime / yaourt python-parsedatetime
 
 
 import mython.times

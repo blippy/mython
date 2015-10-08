@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+pycall tab $*
+#python $NOKILLI/python/tab.py

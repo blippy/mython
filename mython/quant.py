@@ -82,7 +82,7 @@ def load_to_pandas(ticker, filename = None):
     filename = os.path.expanduser(filename)
     df = pd.io.parsers.read_csv(filename)
     if "Date" in df.columns:
-        df.sort(columns = ['Date'], inplace=True)
+        df.sort_values(by = ['Date'], inplace=True)
         # Date is a string rather than a date object:
         df['DateObj'] = df['Date'].map(mython.times.str_to_date)
     if "Close" in df.columns:

@@ -84,12 +84,6 @@ The output might look something like:
 
 .. image:: plot-ftse.png
 
-Sharelock Holmes
-----------------
-
-The raw form downloaded from Sharelock Holmes contains a number of formatting errors. As of 14-Dec-2014, the standard is to fix the file in place::
-
-    sh-csv ~/Downloads/StatsList.csv
 
 
 

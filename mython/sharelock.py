@@ -1,5 +1,10 @@
-import cookielib
+"""
+Module for accessing Sharelock Holmes
+"""
+#import cookielib
 import csv
+import http
+import io
 import pprint
 import re
 import os
@@ -8,7 +13,7 @@ import shutil
 import subprocess
 import sys
 
-import mechanize
+#import mechanize
 
 import csvmc
 
@@ -18,32 +23,40 @@ import csvmc
 
 import pytext
 
-ROOT = os.getenv("DOCS") + "/sharelock"
+#ROOT = os.getenv("DOCS") + "/sharelock"
+ROOT=os.getenv("HOME") + "/.fortran"
 MISC_DIR =  ROOT + "/int/misc"
 COOKIES_FILE = MISC_DIR + "/cookies.txt"
-STATS_FILE = MISC_DIR + "/statslist.csv"
+#STATS_FILE = MISC_DIR + "/StatsList.csv"
+STATS_FILE = ROOT + "/StatsList.csv"
 
-
-def fixfile(filename):
-    with open(filename, 'rU') as fp:
-        rdr = csv.reader(fp)
-        hdr = rdr.next()
-        #hdr = hdr[:-1]
-        numcols = len(hdr)
-        try: epic_col = hdr.index("EPIC")
-        except ValueError: epic_col = None
-        data = []
-        for row in rdr:
-            if epic_col is not None: 
-                row[epic_col] =  row[epic_col].replace(' ', '')
-            row = row[0:numcols]
-            row = [ c.strip() for c in row]
-            #data.append( row[:-1])
-            data.append(row)
+def fixfile(filename = STATS_FILE):
+    txt01 = pytext.load(filename)
+    txt02 = txt01.replace("\r", "\n")
+    for (ori, rep) in [('F.EPIC', 'EPIC'), ('F.Sector', 'SECTOR'),
+                       ('MarketCap', 'MKT'), ('Piotroski_Score', "PIO")]:
+        txt02 = txt02.replace(ori, rep, 1)
+    #txt03 = txt02.replace(' "', '"')
+    #txt03 = re.sub(r',$', '', txt02)
     
-    with open(filename, 'wb') as f:
-        writer = csv.writer(f)
-        writer.writerows([hdr] + data)
+    #rdr = csv.reader(io.StringIO(txt02))
+    #hdr = rdr.next()
+    #print(hdr)
+                     
+    #txt3 = ''                
+    rows01 = list(csv.reader(io.StringIO(txt02)))
+    len0 = len(rows01[0])
+    
+    rows02 = []
+    for r in rows01:
+        cols = [c.strip() for c in r]
+        rows02.append(cols[0:len0])
+    #rows02 = [row[0:len0] for row in rows01]
+    #rows02 = rows01+body
+
+    csv.writer(open(filename, 'w')).writerows(rows02)
+    return rows02
+
     
 
 def csvnameXXX():
@@ -71,8 +84,8 @@ def loadclean():
 
 def prdf(df):
     'print a data frame'
-    print
-    print df.to_string()
+    print()
+    print(df.to_string())
 
 def read_calcsXXX():
     "Read the calculations csv file as a pandas dataframe"
@@ -88,8 +101,8 @@ def read_csv():
 def print_forms(br):
     "Useful for debugging purposes"
     for form in br.forms():
-        print form
-        print "--------------------------------"
+        print(form)
+        print("--------------------------------")
 
 def print_links(br):
     "Useful for debugging purposes"
@@ -138,7 +151,7 @@ def get_rs6(): get_stats("rs6")
 
 def main():   
     df = loadclean()
-    print df # print descriptive info
+    print(df) # print descriptive info
     #df = df[(df.EV_EBITDA <=6.5) & (df.Yield >= 4.0)] # this works
     df = df[df.EV_EBITDA <=6.5]
 
@@ -146,7 +159,7 @@ def main():
     df = df.sort_index(by='EV_EBITDA')
 
     df.index = range(1, 1+ len(df)) # renumber the rows sequentially
-    print df.to_string()
-    print "Number of rows:", len(df)
+    print(df.to_string())
+    print("Number of rows:", len(df))
 
-    print 'Finished'
+    print('Finished')

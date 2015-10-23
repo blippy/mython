@@ -11,9 +11,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   admin
    csv
    hdf5
    quant
+   sharelock
             
 
 

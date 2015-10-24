@@ -15,13 +15,13 @@ import sys
 
 #import mechanize
 
-import csvmc
+import mython.csvmc as csvmc
 
 # import pandas # apt-installable
 
 #sys.path.append('/home/mcarter/repos/nokilli/python')
 
-import pytext
+import mython.pytext as pytext
 
 #ROOT = os.getenv("DOCS") + "/sharelock"
 ROOT=os.getenv("HOME") + "/.fortran"

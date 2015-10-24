@@ -82,7 +82,7 @@ Here is a prototypical plot on a symbol against date, including a 200dMA, with d
 
 The output might look something like:
 
-.. image:: plot-ftse.png
+.. image:: _static/plot-ftse.png
 
 
 

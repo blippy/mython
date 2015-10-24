@@ -3,10 +3,14 @@ Quant library for stock price analysis.
 
 Supercedes module bean.
 
-Example usage:
+Example usage is below.
 
+.. highlight:: python
 >>> get_decade("VOD.L")
 Created file /home/mcarter/.fortran/VOD.L
+
+
+Hope that helps.
 """
 
 import argparse
@@ -177,5 +181,36 @@ def sma(alist, n = 50):
         #print(i0, idx)
         result[idx] = np.mean(alist[i0:idx+1])
     return result
+
+def quantiles(df_column, ntiles=10):
+    """
+    Returns the quantiles in NTILES buckets
+    Return type: pandas.core.series.Series
+    
+    Example usage:
+
+    .. highlight:: python
+    >>> import pandas
+    >>> df = pd.io.parsers.read_csv('/home/mcarter/.fortran/StatsList.csv')
+    >>> quantile(df['RS_6Month'], 5)
+    0.0    -75.730
+    0.2     -6.872
+    0.4      6.156
+    0.6     15.468
+    0.8     28.872
+    1.0    123.500
+    Name: RS_6Month, dtype: float64
+
+    
+    The implementation is fairly simple:
+
+    .. highlight:: python
+    >>> qs = [i/ntiles for  i in range(ntiles+1)]
+    >>> return df_column.quantile(qs)
+
+    """
+    qs = [i/ntiles for  i in range(ntiles+1)]
+    return df_column.quantile(qs)    
+
 
 if __name__ == "__main__": cli_main()

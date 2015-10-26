@@ -1,6 +1,8 @@
 """
 Module for accessing Sharelock Holmes
 """
+
+import argparse
 #import cookielib
 import csv
 import http
@@ -33,8 +35,8 @@ STATS_FILE = ROOT + "/StatsList.csv"
 def fixfile(filename = STATS_FILE):
     txt01 = pytext.load(filename)
     txt02 = txt01.replace("\r", "\n")
-    for (ori, rep) in [('F.EPIC', 'EPIC'), ('F.Sector', 'SECTOR'),
-                       ('MarketCap', 'MKT'), ('Piotroski_Score', "PIO")]:
+    for (ori, rep) in [('F.EPIC', 'epic'), ('F.Sector', 'sector'),
+                       ('MarketCap', 'mkt'), ('Piotroski_Score', "pio"), ('RS_5Year', 'rs5y'), ('RS_6Month', 'rs6mb'), ('RS_Year', 'rs1y')]:
         txt02 = txt02.replace(ori, rep, 1)
     #txt03 = txt02.replace(' "', '"')
     #txt03 = re.sub(r',$', '', txt02)
@@ -67,6 +69,43 @@ def csvnameXXX():
     filein = os.path.expanduser(filein)
     return filein
 
+
+def momo():
+    """Fix the standard sharelock file and create the momo.csv in the standard location
+    """
+    global STATS_FILE
+    fixfile()
+    d = csvmc.read_dict(STATS_FILE)
+    def f(row):
+        epic = row['epic']
+        rs6mb = float(row['rs6mb'])
+        rs1y  = float(row['rs1y'])
+        rs6ma = (rs1y/100.0 + 1.0)/(rs6mb/100.0 + 1.0)*100.0 - 100.0
+        rs6ma = "{:.2f}".format(rs6ma)
+        res = { 'epic' : epic, 'rs6ma' : rs6ma, 'rs6mb' : row['rs6mb'], 'rs1y': row['rs1y']}
+        return res
+
+        
+    d1 = []
+    for r in d:
+        try:
+            rnew = f(r)
+            d1.append(rnew)
+        except ValueError:
+            #print("Skipping:", rnew.epic)
+            pass
+
+    #csvmc.write_dict(d1, ROOT + '/momo.csv')
+    with open(ROOT + '/momo.csv', "w") as f:
+        w = csv.DictWriter(f, ["epic", "rs6ma", "rs6mb", "rs1y"])
+        w.writeheader()
+        for r in d1: w.writerow(r)
+        
+    #print(d1)
+        
+    
+
+    
 CLEAN_STATSLISTXXX = ROOT + "/int/misc/clean-statslist.csv"
 def clean_latest_statslist():
     "Identify latest StatsList file, and clean it up"
@@ -163,3 +202,13 @@ def main():
     print("Number of rows:", len(df))
 
     print('Finished')
+
+
+if __name__ == "__main__" :
+    p = argparse.ArgumentParser()
+    p.add_argument("momo", help = "Fix the CSV file, and create ~/.fortran/momo.csv")
+    args = p.parse_args()
+
+    if args.momo: momo()
+    print(args)
+    print("Finished")

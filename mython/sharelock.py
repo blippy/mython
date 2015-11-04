@@ -188,7 +188,7 @@ def get_rs6(): get_stats("rs6")
 
 ############################################################################
 
-def main():   
+def main_a():   
     df = loadclean()
     print(df) # print descriptive info
     #df = df[(df.EV_EBITDA <=6.5) & (df.Yield >= 4.0)] # this works
@@ -203,12 +203,82 @@ def main():
 
     print('Finished')
 
+############################################################################
+# statistical percentiles for
+# http://www.markcarter.me.uk/money/stats.htm
 
+    """
+Find the pernctiles
+"""
+
+
+#import mython.csvmc
+import mython.maths
+
+
+
+#def keyfunc(x): return x['FTSE_Index']
+#def keyfunc(x): return x['RS_6Month']
+#def keyfunc(x): return x['EV_Sales']
+
+def get_floats(data, fieldname):
+	floats = []
+	for el in data:
+		f =  el[fieldname]
+		try:
+			f = float(f)
+		except ValueError:
+			#print "Skipping :*" + f + "*"
+			continue
+		floats.append(f)
+	floats.sort()
+	return floats
+
+#print f
+
+# [float(keyfunc(el)) for el in data if len(el)>0]
+
+#floats.sort()
+#print floats
+
+def prin_fstats(data, fieldname, step):
+	print(fieldname)
+	floats = get_floats(data, fieldname)
+	print("NUM=", len(floats))
+
+	rng = range(0, 100 + step, step)
+	for pc in rng:
+		# score = scipy.stats.scoreatpercentile(floats, pc)
+		score = mython.maths.percentile(floats , pc/100)
+		print("{0:02d}% {1:8.2f}".format(pc, score))
+	print()
+
+def mkt():
+	data = mython.csvmc.read_dict(os.path.expanduser('~/.fortran/StatsList.csv'))
+	#print("NUM=", len(data))
+	for k in ['mkt', 'rs6mb', 'PBV', 'PER']:
+		prin_fstats(data, k, 10)
+
+#if __name__ == "__main__":
+#	main()
+
+############################################################################        
+
+cmd_help = """
+Run a command:
+momo - Fix the CSV file, and create ~/.fortran/momo.csv
+"""
+        
 if __name__ == "__main__" :
     p = argparse.ArgumentParser()
-    p.add_argument("momo", help = "Fix the CSV file, and create ~/.fortran/momo.csv")
+    p.add_argument("--debug", action = 'store_true', help = "Print the arguments")
+    p.add_argument("--momo", action = 'store_true', help = "Fix the CSV file, and create ~/.fortran/momo.csv")
+    p.add_argument("--mkt", action = 'store_true', help = 'Run percentiles calc on market for http://www.markcarter.me.uk/money/stats.htm')
+    #p.add_argument("cmd", help = cmd_help)
     args = p.parse_args()
 
+    if args.debug: print(args)
+    if args.mkt: mkt()
     if args.momo: momo()
-    print(args)
+    #print(args)
     print("Finished")

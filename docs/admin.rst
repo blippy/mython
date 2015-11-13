@@ -3,7 +3,7 @@ Admin
 
 Install mython module::
 
-  python3 setup.py install --user
+  make install
 
 This will copy scripts to `~/.local/bin`  
 

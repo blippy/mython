@@ -9,7 +9,14 @@ The raw form downloaded from Sharelock Holmes contains a number of formatting er
     import mython.sharelock
     mython.sharelock.fixfile()
 
-This fixes file ~/.fortran/StatsList.csv on Linux systems, and returns a list of lists.    
+This fixes file `~/.fortran/StatsList.csv` on Linux systems, and returns a list of lists.
+
+Alternatively::
+
+  mython sharelock --momo
+
+This also creates a `momo.csv`  file.
+
 
 Module documents
 ----------------

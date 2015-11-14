@@ -40,11 +40,20 @@ def to5(filename):
     finally:    
         h5.close()
 
+
+def get_dset(fname, dset):
+    h5 = h5py.File(fname, 'r')
+    for x in h5[dset]: print(x)
+    h5.close()
+    
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument('--debug', action = "store_true", help = "Print the arguments")
+    p.add_argument('--input', action = "store", help = "Input filename")
+    p.add_argument('--get-dset', action = "store", help = "Get and print a dataset, specifiying the path if necessary")
     p.add_argument('--to5', action = "store", help = "Convert csv file to HDF5. File must be in ~/.fortran directory")
 
     args = p.parse_args()
     if args.debug: print(args)
+    if args.get_dset: get_dset(args.input, args.get_dset)
     if args.to5: to5(args.to5)

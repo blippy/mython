@@ -40,17 +40,15 @@ def ticker_filename(ticker):
     fname += ticker
     return fname
 
-def get_decade(ticker):
-    """Get 10 years worth of data for a ticker  from Yahoo Finance and store it in file::
-
-            ~/.fortran/$TICKER
+def get_decade(ticker, fout = None):
+    """Get 10 years worth of data for a ticker  from Yahoo Finance and store it in a file.
+        
 
     Args:
         ticker: ticker symbol to fetch. E.g. VOD.L for Vodafone, HYH for Halyard Health.
-
+        fout: outfilename. If None:  ~/.fortran/$TICKER
     """
     
-   
     def dvals(human):
         d = parsedatetime.Calendar().parse(human)[0]
         # note we return month -1 due to the way Yahoo accepts months
@@ -72,7 +70,7 @@ def get_decade(ticker):
     out_text = "\n".join( [hdr] + data)
 
     #txt = "how now brown cow"
-    fout = ticker_filename(ticker)
+    if fout is None: fout = ticker_filename(ticker)
     open(fout,"w").write(out_text)
     #print(dvals("today"))
     print("Created file", fout)
@@ -100,10 +98,12 @@ def load_to_pandas(ticker, filename = None):
 
 def cli_main():
     p = argparse.ArgumentParser("Quant library")
-    p.add_argument('--decade', dest = "decade", help="download ticker data for a decade") 
+    p.add_argument('--decade', dest = "decade", help="download ticker data for a decade")
+    p.add_argument('-o', dest= "outfilename", help="output to file")    
     args = p.parse_args()
     #print(type(args.decade))
-    if args.decade: get_decade(args.decade.upper())
+    if args.outfilename: args.outfilename = os.path.expanduser(args.outfilename)
+    if args.decade: get_decade(args.decade.upper(), args.outfilename)
 
 
 years    = mdates.YearLocator()   # every year

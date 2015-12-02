@@ -24,8 +24,8 @@ print("Disabling pandas at 02-Dec-2015. Seems it has a bug. load_to_pandas() won
 
 import parsedatetime # sudo pip3 install parsedatetime / yaourt python-parsedatetime
 
-print("Similar problem with a mython.times import")
-#import mython.times
+#print("Similar problem with a mython.times import")
+import mython.times
 
 def get_url(url):
     r = requests.get(url)

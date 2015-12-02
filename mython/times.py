@@ -1,12 +1,14 @@
 import datetime
 import time
-import pkg_resources
 
-pdtv = pkg_resources.get_distribution("parsedatetime").version
-if pdtv == '1.2':
-    import parsedatetime as pdt
-else:
-    import parsedatetime.parsedatetime as pdt # sudo apt-get install python-parsedatetime
+#This is a bit screwy. pkg_resources may not even load
+#import pkg_resources
+#pdtv = pkg_resources.get_distribution("parsedatetime").version
+#if pdtv == '1.2':
+#    import parsedatetime as pdt
+#else:
+#    import parsedatetime.parsedatetime as pdt
+import parsedatetime.parsedatetime as pdt
 
 
 

@@ -19,11 +19,13 @@ import requests
 
 import matplotlib.dates as mdates # sudo apt-get install python3-matplotlib python-matplotlib-doc
 import numpy as np
-import pandas as pd # sudo apt-get install python3-pandas
+print("Disabling pandas at 02-Dec-2015. Seems it has a bug. load_to_pandas() won't work")
+#import pandas as pd # sudo apt-get install python3-pandas
+
 import parsedatetime # sudo pip3 install parsedatetime / yaourt python-parsedatetime
 
-
-import mython.times
+print("Similar problem with a mython.times import")
+#import mython.times
 
 def get_url(url):
     r = requests.get(url)
@@ -60,7 +62,7 @@ def get_decade(ticker, fout = None):
     dstr = dfmt.format(m0, d0, y0, m1, d1, y1)
     ufmt = "http://ichart.finance.yahoo.com/table.csv?s={0}&{1}&g=d&ignore=.csv"   
     url = ufmt.format(ticker, dstr)
-    #print(url) ; return
+    print(url)
     txt = get_url(url)
     
     lines = txt.splitlines()

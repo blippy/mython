@@ -15,67 +15,19 @@ Hope that helps.
 
 import argparse
 import os.path
-import requests
+
 
 import matplotlib.dates as mdates # sudo apt-get install python3-matplotlib python-matplotlib-doc
 import numpy as np
 print("Disabling pandas at 02-Dec-2015. Seems it has a bug. load_to_pandas() won't work")
 #import pandas as pd # sudo apt-get install python3-pandas
 
-import parsedatetime # sudo pip3 install parsedatetime / yaourt python-parsedatetime
+
 
 #print("Similar problem with a mython.times import")
 import mython.times
 
-def get_url(url):
-    r = requests.get(url)
-    r.connection.close()
-    return r.text
 
-def ticker_filename(ticker):
-    "Determine a filename for a ticker"
-    dout = os.path.expanduser("~/.fortran")
-    if not os.path.exists(dout): os.makedirs(dout)
-    fname = dout + "/"
-    #fname = "{0}/.fortran/{1}".format(
-    #ticker = ticker.upper()
-    fname += ticker
-    return fname
-
-def get_decade(ticker, fout = None):
-    """Get 10 years worth of data for a ticker  from Yahoo Finance and store it in a file.
-        
-
-    Args:
-        ticker: ticker symbol to fetch. E.g. VOD.L for Vodafone, HYH for Halyard Health.
-        fout: outfilename. If None:  ~/.fortran/$TICKER
-    """
-    
-    def dvals(human):
-        d = parsedatetime.Calendar().parse(human)[0]
-        # note we return month -1 due to the way Yahoo accepts months
-        return d.tm_year , d.tm_mon -1 , d.tm_mday
-
-    y0, m0, d0 = dvals("10 years ago")
-    y1, m1, d1 = dvals("today")
-    dfmt = "a={0}&b={1}&c={2}&d={3}&e={4}&f={5}"
-    dstr = dfmt.format(m0, d0, y0, m1, d1, y1)
-    ufmt = "http://ichart.finance.yahoo.com/table.csv?s={0}&{1}&g=d&ignore=.csv"   
-    url = ufmt.format(ticker, dstr)
-    print(url)
-    txt = get_url(url)
-    
-    lines = txt.splitlines()
-    hdr = lines[0]
-    data = lines[1:]
-    data.reverse()
-    out_text = "\n".join( [hdr] + data)
-
-    #txt = "how now brown cow"
-    if fout is None: fout = ticker_filename(ticker)
-    open(fout,"w").write(out_text)
-    #print(dvals("today"))
-    print("Created file", fout)
 
 
 def load_to_pandas(ticker, filename = None):
@@ -99,6 +51,8 @@ def load_to_pandas(ticker, filename = None):
     return df
 
 def cli_main():
+    print("You probably want to use the yahoo module instead")
+    exit(1)
     p = argparse.ArgumentParser("Quant library")
     p.add_argument('--decade', dest = "decade", help="download ticker data for a decade")
     p.add_argument('-o', dest= "outfilename", help="output to file")    

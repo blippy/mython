@@ -1,5 +1,6 @@
 import argparse
 import ftplib
+import sys
 
 from mython.compat import princ
 
@@ -23,10 +24,19 @@ def main():
     args = parser.parse_args()
     if args.commands: princ(args) ; exit(0)
 
-    # TODO handle the case of file retrival eventually
-    f = ftplib.FTP(args.server)
+    #sys.stderr.write("ERR: args.server='{0}'\n".format(args.server))
+
+    try:
+        f = ftplib.FTP(args.server)
+    except:
+        sys.stderr.write("ERR: args.server='{0}'\n".format(args.server))
+        raise
     f.login()
-    f.cwd(args.ddir)
+    try:
+        f.cwd(args.ddir)
+    except:
+        print("ERR changing to dir:", args.ddir)
+        raise
     fname = args.sfile
     fp = open(args.sdir + "/" + fname, 'rb')
     f.storbinary('STOR ' + fname, fp)

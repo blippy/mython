@@ -40,7 +40,7 @@ def get_decade(ticker):
     dstr = dfmt.format(m0, d0, y0, m1, d1, y1)
     ufmt = "http://ichart.finance.yahoo.com/table.csv?s={0}&{1}&g=d&ignore=.csv"   
     url = ufmt.format(ticker, dstr)
-    #print(url)
+    print(url, file = sys.stderr)
     txt = get_url(url)
     
     lines = txt.splitlines()
@@ -57,6 +57,7 @@ def get_decade(ticker):
 
 
 def yahoo_main():
+    print("Seriously, just use ydec instead", file=sys.stderr)
     sym = sys.argv[1]
     print(get_decade(sym))
     
